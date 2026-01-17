@@ -1,11 +1,11 @@
 # 📡 MQTT Antena
 
-MQTT Antena is a simple, modern, web-based MQTT client application built with Python and Flask. It allows users to manage multiple MQTT broker connections, monitor real-time message streams, and publish messages through a clean web interface.
+MQTT Antena is a simple, modern, web-based MQTT client application built with Python and Flask. It allows users to manage multiple MQTT broker connections by connecting to a broker, monitor real-time message streams, and publish messages through a clean web interface. It is intended to be used as a development tool for self-hosted MQTT-based applications.
 
-## 🚀 Features
+##  Features
 
 -   **User Accounts:** Simple registration and login system.
--   **Broker Management:** Add, edit, connect, and delete multiple MQTT brokers.
+-   **Broker Management:** Add, edit, connect, and delete multiple MQTT broker connections.
 -   **Live Subscription:** Real-time message monitoring using Server-Sent Events (SSE).
 -   **Subscription Filtering:** Subscribe to specific topics or use wildcards (`#`).
 -   **Message Publishing:** Send MQTT messages to any connected broker.
@@ -13,7 +13,7 @@ MQTT Antena is a simple, modern, web-based MQTT client application built with Py
 -   **Persistence:** Persistent database storage using Docker volumes.
 -   **Developer Friendly:** Includes a `Makefile` for common tasks and development.
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 -   **Backend:** Python 3.9, Flask, Flask-SQLAlchemy, Paho-MQTT, Gunicorn, Eventlet.
 -   **Frontend:** HTML5, CSS3 (Vanilla), JavaScript (Minimal for SSE/Theme).
@@ -21,12 +21,12 @@ MQTT Antena is a simple, modern, web-based MQTT client application built with Py
 -   **Deployment:** Docker, Docker Compose.
 -   **Tooling:** Ruff (Linting/Formatting), Make.
 
-## 🔐 Security
+##  Security
 
 - **Password Hashing:** User passwords are encrypted using `pbkdf2:sha256` hashing.
 - **Secret Key:** The application uses a `SECRET_KEY` for session security. **In production, you must set this via an environment variable.**
 
-## ⚙️ Configuration
+##  Configuration
 
 You can configure the application using the following environment variables:
 
@@ -35,7 +35,7 @@ You can configure the application using the following environment variables:
 | `SECRET_KEY` | Flask secret key for sessions | `super_secret_key_dev_only` |
 | `DATABASE_URL`| SQLAlchemy database URI | `sqlite:///../data/antena.db` |
 
-## 💾 Data Storage
+##  Data Storage
 
 ### What is stored
 - **User Accounts:** Usernames and securely hashed passwords.
@@ -45,7 +45,7 @@ You can configure the application using the following environment variables:
 - **Connection Status:** Broker connectivity is runtime-only and starts as "Disconnected" on every app restart.
 - **Message History:** MQTT messages are streamed in real-time and are not saved to the database. History is lost on page refresh or app restart.
 
-## 📦 Getting Started
+##  Getting Started
 
 ### Quick Start (using Docker Hub)
 If you just want to run the application without downloading the source code, use the following `docker-compose.yml`:
@@ -98,7 +98,7 @@ A `Makefile` is provided to simplify development tasks:
 -   **Cleanup:** `make clean` (Removes caches).
 -   **Publish Image:** `make publish TAG=vx.y.z` (Tags and pushes to `flvbssln/mqtt-antena`).
 
-## 📂 Project Structure
+##  Project Structure
 
 ```text
 mqtt-antena/
@@ -116,6 +116,6 @@ mqtt-antena/
 └── .gitignore          # Git ignore rules
 ```
 
-## 📝 License
+##  License
 
 This project is licensed under the MIT License.
