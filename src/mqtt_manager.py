@@ -16,6 +16,7 @@ connected_clients = {}
 listeners = []
 listeners_lock = threading.Lock()
 
+
 def broadcast_message(message_data):
     """Push message to all active SSE listeners"""
     with listeners_lock:
@@ -26,7 +27,8 @@ def broadcast_message(message_data):
             try:
                 q.put_nowait(message_data)
             except queue.Full:
-                pass 
+                pass
+
 
 class ActiveClient:
     def __init__(self, broker_id, name, ip, port, user=None, password=None):
@@ -40,11 +42,11 @@ class ActiveClient:
         self.is_connected = False
         self.connection_error = None
         self.subscribed_topics = set()
-        
+
         # User snippet logic adaptation
         if self.user and self.password:
             self.client.username_pw_set(self.user, self.password)
-            
+
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
         self.client.on_disconnect = self.on_disconnect
@@ -52,7 +54,7 @@ class ActiveClient:
     def connect(self):
         try:
             self.client.connect(self.ip, self.port, 60)
-            self.client.loop_start() # Non-blocking
+            self.client.loop_start()  # Non-blocking
             return True, None
         except Exception as e:
             self.connection_error = str(e)
@@ -70,19 +72,19 @@ class ActiveClient:
             for t in list(self.subscribed_topics):
                 self.client.unsubscribe(t)
                 self.subscribed_topics.remove(t)
-        
+
         target = topic if topic else "#"
         print(f"Subscribing to {target} on {self.name}", flush=True)
         self.client.subscribe(target)
         self.subscribed_topics.add(target)
-        
+
     def clear_subscription(self):
         if self.subscribed_topics:
             for t in list(self.subscribed_topics):
                 self.client.unsubscribe(t)
             self.subscribed_topics.clear()
             print(f"Cleared subscriptions on {self.name}", flush=True)
-            
+
     def publish(self, topic, payload):
         self.client.publish(topic, payload)
 
@@ -91,7 +93,10 @@ class ActiveClient:
         if rc == 0:
             self.is_connected = True
             self.connection_error = None
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] {self.name}: Connected!", flush=True)
+            print(
+                f"[{datetime.now().strftime('%H:%M:%S')}] {self.name}: Connected!",
+                flush=True,
+            )
             # Note: We do NOT auto-subscribe to '#' here unless the user requested it.
             # But per user snippet: "Connected! Subscribing to messages..." -> client.subscribe("#")
             # The prompt says: "The user must be able to select ... and subscribe to a topic... If no topic is provided, then all..."
@@ -107,13 +112,13 @@ class ActiveClient:
             payload_str = msg.payload.decode()
         except:
             payload_str = str(msg.payload)
-            
+
         data = {
-            'broker_id': self.broker_id,
-            'broker_name': self.name,
-            'timestamp': timestamp,
-            'topic': msg.topic,
-            'payload': payload_str
+            "broker_id": self.broker_id,
+            "broker_name": self.name,
+            "timestamp": timestamp,
+            "topic": msg.topic,
+            "payload": payload_str,
         }
         # Send to global UI stream
         broadcast_message(data)
@@ -123,25 +128,28 @@ class ActiveClient:
         self.is_connected = False
         print(f"{self.name} disconnected. RC: {rc}", flush=True)
 
+
 # Manager functions
 def get_client(broker_id):
     return connected_clients.get(int(broker_id))
+
 
 def add_client(broker_obj):
     # If already exists, disconnect first (refresh)
     if broker_obj.id in connected_clients:
         remove_client(broker_obj.id)
-        
+
     client = ActiveClient(
-        broker_obj.id, 
-        broker_obj.name, 
-        broker_obj.ip, 
-        broker_obj.port, 
-        broker_obj.username, 
-        broker_obj.password
+        broker_obj.id,
+        broker_obj.name,
+        broker_obj.ip,
+        broker_obj.port,
+        broker_obj.username,
+        broker_obj.password,
     )
     connected_clients[broker_obj.id] = client
     return client
+
 
 def remove_client(broker_id):
     if broker_id in connected_clients:
