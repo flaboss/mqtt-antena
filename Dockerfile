@@ -1,4 +1,5 @@
-FROM python:3.9-slim
+ARG PYTHON_VERSION=3.11
+FROM python:${PYTHON_VERSION}-slim
 
 WORKDIR /app
 
@@ -10,9 +11,6 @@ WORKDIR /app
 COPY . .
 RUN mkdir -p data
 
-# Create a volume for the database persistence if needed, 
-# but for now we keep it simple in the container or mounted via execution
-# EXPOSE the requested port
 EXPOSE 8585
 
 # Using gunicorn with eventlet for SSE support

@@ -15,7 +15,7 @@ MQTT Antena is a simple, modern, web-based MQTT client application built with Py
 
 ##  Tech Stack
 
--   **Backend:** Python 3.9, Flask, Flask-SQLAlchemy, Paho-MQTT, Gunicorn, Eventlet.
+-   **Backend:** Python 3.11, Flask, Flask-SQLAlchemy, Paho-MQTT, Gunicorn, Eventlet.
 -   **Frontend:** HTML5, CSS3 (Vanilla), JavaScript (Minimal for SSE/Theme).
 -   **Database:** SQLite.
 -   **Deployment:** Docker, Docker Compose.
@@ -75,6 +75,21 @@ docker-compose up -d
 
 -   [Docker](https://www.docker.com/get-started)
 -   [Docker Compose](https://docs.docker.com/compose/install/)
+-   [pyenv](https://github.com/pyenv/pyenv) (Optional, but recommended)
+
+#### Local Setup (Virtual Environment)
+
+For local development, linting, and formatting, it is recommended to use the provided `venv` target:
+
+1. **Ensure you have Python 3.11 installed** (e.g., via `pyenv install 3.11.14`).
+2. **Create and sync the virtual environment**:
+   ```bash
+   make venv
+   ```
+3. **Activate the environment**:
+   ```bash
+   source .venv/bin/activate
+   ```
 
 #### Running the Application (Recommended)
 
@@ -90,13 +105,13 @@ Access the application at: **http://localhost:8585**
 
 A `Makefile` is provided to simplify development tasks:
 
+-   **Virtual Env:** `make venv` (Creates and syncs the `.venv`).
+-   **Build Image:** `make build` (Builds the Docker image).
 -   **Run Application:** `make run` (Starts app via Docker Compose).
--   **Stop Application:** `make stop` (Stops app via Docker Compose).
--   **Interactive Shell:** `make container` (Builds image and opens bash inside).
 -   **Linting:** `make lint` (Runs Ruff check).
 -   **Formatting:** `make format` (Runs Ruff format).
--   **Cleanup:** `make clean` (Removes caches).
--   **Publish Image:** `make publish TAG=vx.y.z` (Tags and pushes to `flvbssln/mqtt-antena`).
+-   **Cleanup:** `make clean` (Removes caches and `.venv`).
+-   **Publish Image:** `make publish TAG=vx.y.z` (Pushes to `flvbssln/mqtt-antena`).
 
 ##  Project Structure
 

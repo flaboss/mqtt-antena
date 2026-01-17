@@ -1,30 +1,37 @@
 IMAGE_NAME=mqtt-antena
 DOCKER_USER=flvbssln
+VENV=.venv
+PYTHON=$(VENV)/bin/python
+PIP=$(VENV)/bin/pip
+PYTHON_VERSION_ARG=$(shell cat .python-version)
 
-.PHONY: build container lint format clean publish run stop
+.PHONY: build lint format clean publish run venv
+
+venv: $(VENV)/bin/activate
+
+$(VENV)/bin/activate: requirements.txt
+	test -d $(VENV) || python3 -m venv $(VENV)
+	$(PIP) install --upgrade pip
+	$(PIP) install -r requirements.txt
+	touch $(VENV)/bin/activate
 
 build:
-	docker build -t $(IMAGE_NAME) .
+	docker build --build-arg PYTHON_VERSION=$(PYTHON_VERSION_ARG) -t $(IMAGE_NAME) .
 
 run: build
 	docker-compose up -d
 
-stop:
-	docker-compose down
+lint: venv
+	$(VENV)/bin/ruff check src
 
-container: build
-	docker run -it --rm -v $(PWD)/data:/app/data --entrypoint /bin/bash $(IMAGE_NAME)
-
-lint:
-	ruff check src
-
-format:
-	ruff format src
+format: venv
+	$(VENV)/bin/ruff format src
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
 	rm -rf .ruff_cache
+	rm -rf $(VENV)
 
 publish: build
 	@if [ -z "$(TAG)" ]; then echo "Error: TAG is not set. Use 'make publish TAG=v1.0.0'"; exit 1; fi
