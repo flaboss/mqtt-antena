@@ -5,7 +5,8 @@ PYTHON=$(VENV)/bin/python
 PIP=$(VENV)/bin/pip
 PYTHON_VERSION_ARG=$(shell cat .python-version)
 
-.PHONY: build lint format clean publish run venv
+.PHONY: build lint format clean publish run venv destroy
+
 
 venv: $(VENV)/bin/activate
 
@@ -31,7 +32,6 @@ clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
 	rm -rf .ruff_cache
-	rm -rf $(VENV)
 
 publish: build
 	@if [ -z "$(TAG)" ]; then echo "Error: TAG is not set. Use 'make publish TAG=v1.0.0'"; exit 1; fi
@@ -39,3 +39,7 @@ publish: build
 	docker tag $(IMAGE_NAME) $(DOCKER_USER)/$(IMAGE_NAME):latest
 	docker push $(DOCKER_USER)/$(IMAGE_NAME):$(TAG)
 	docker push $(DOCKER_USER)/$(IMAGE_NAME):latest
+
+destroy:
+	docker-compose down --rmi local --volumes --remove-orphans
+	docker rmi $(IMAGE_NAME) || true

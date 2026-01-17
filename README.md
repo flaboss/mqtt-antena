@@ -112,6 +112,7 @@ A `Makefile` is provided to simplify development tasks:
 -   **Formatting:** `make format` (Runs Ruff format).
 -   **Cleanup:** `make clean` (Removes caches and `.venv`).
 -   **Publish Image:** `make publish TAG=vx.y.z` (Pushes to `flvbssln/mqtt-antena`).
+-   **Destroy Project:** `make destroy` (Removes local containers, images, and volumes).
 
 ##  Project Structure
 
