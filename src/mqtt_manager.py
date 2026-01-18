@@ -21,7 +21,10 @@ def broadcast_message(message_data):
 
 
 class ActiveClient:
+    """Wrapper for a Paho MQTT client managing a connection to a specific broker."""
+
     def __init__(self, broker_id, name, ip, port, user=None, password=None):
+        """Initialize an ActiveClient instance."""
         self.broker_id = broker_id
         self.name = name
         self.ip = ip
@@ -41,6 +44,7 @@ class ActiveClient:
         self.client.on_disconnect = self.on_disconnect
 
     def connect(self):
+        """Establish a connection to the MQTT broker and start the loop."""
         try:
             self.client.connect(self.ip, self.port, 60)
             self.client.loop_start()
@@ -50,11 +54,13 @@ class ActiveClient:
             return False, str(e)
 
     def disconnect(self):
+        """Stop the loop and disconnect from the MQTT broker."""
         self.client.loop_stop()
         self.client.disconnect()
         self.is_connected = False
 
     def update_subscription(self, topic):
+        """Update the MQTT topic subscription for this client."""
         if self.subscribed_topics:
             for t in list(self.subscribed_topics):
                 self.client.unsubscribe(t)
@@ -66,6 +72,7 @@ class ActiveClient:
         self.subscribed_topics.add(target)
 
     def clear_subscription(self):
+        """Unsubscribe from all topics."""
         if self.subscribed_topics:
             for t in list(self.subscribed_topics):
                 self.client.unsubscribe(t)
@@ -73,9 +80,11 @@ class ActiveClient:
             print(f"Cleared subscriptions on {self.name}", flush=True)
 
     def publish(self, topic, payload):
+        """Publish a message to a specific MQTT topic."""
         self.client.publish(topic, payload)
 
     def on_connect(self, client, userdata, flags, rc):
+        """Callback for when the client connects to the broker."""
         if rc == 0:
             self.is_connected = True
             self.connection_error = None
@@ -89,6 +98,7 @@ class ActiveClient:
             print(self.connection_error, flush=True)
 
     def on_message(self, client, userdata, msg):
+        """Callback for when a message is received from the broker."""
         timestamp = datetime.now().strftime("%H:%M:%S")
         try:
             payload_str = msg.payload.decode()
@@ -107,15 +117,18 @@ class ActiveClient:
         print(f"[{timestamp}] {self.name} | {msg.topic}: {payload_str}", flush=True)
 
     def on_disconnect(self, client, userdata, rc):
+        """Callback for when the client disconnects from the broker."""
         self.is_connected = False
         print(f"{self.name} disconnected. RC: {rc}", flush=True)
 
 
 def get_client(broker_id):
+    """Retrieve an active client by its broker ID."""
     return connected_clients.get(int(broker_id))
 
 
 def add_client(broker_obj):
+    """Create and store a new active client for a broker."""
     if broker_obj.id in connected_clients:
         remove_client(broker_obj.id)
 
@@ -132,6 +145,7 @@ def add_client(broker_obj):
 
 
 def remove_client(broker_id):
+    """Disconnect and remove an active client by its broker ID."""
     if broker_id in connected_clients:
         try:
             connected_clients[broker_id].disconnect()

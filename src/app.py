@@ -42,6 +42,7 @@ db.init_app(app)
 
 
 def login_required(f):
+    """Decorator to require login for a route."""
     from functools import wraps
 
     @wraps(f)
@@ -59,6 +60,7 @@ with app.app_context():
 
 @app.route("/")
 def index():
+    """Redirect to brokers page if logged in, otherwise to login page."""
     if "user_id" in session:
         return redirect(url_for("brokers"))
     return redirect(url_for("login"))
@@ -66,6 +68,7 @@ def index():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    """Handle user registration."""
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -86,11 +89,13 @@ def register():
 
 @app.route("/howto")
 def howto():
+    """Render the how-to guide page."""
     return render_template("howto.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    """Handle user login."""
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -106,6 +111,7 @@ def login():
 
 @app.route("/logout")
 def logout():
+    """Handle user logout."""
     session.pop("user_id", None)
     return redirect(url_for("login"))
 
@@ -113,6 +119,7 @@ def logout():
 @app.route("/brokers/edit/<int:broker_id>", methods=["GET", "POST"])
 @login_required
 def edit_broker(broker_id):
+    """Edit an existing MQTT broker configuration."""
     broker = Broker.query.get_or_404(broker_id)
     if request.method == "POST":
         broker.name = request.form.get("name")
@@ -136,6 +143,7 @@ def edit_broker(broker_id):
 @app.route("/brokers", methods=["GET", "POST"])
 @login_required
 def brokers():
+    """List, add, delete, and manage MQTT broker connections."""
     if request.method == "POST":
         if "add" in request.form:
             name = request.form.get("name")
@@ -209,6 +217,7 @@ def brokers():
 @app.route("/subscription")
 @login_required
 def subscription():
+    """Display and manage MQTT topic subscriptions."""
     active_brokers_data = []
     for b in Broker.query.all():
         c = get_client(b.id)
@@ -231,6 +240,7 @@ def subscription():
 @app.route("/toggle_listen", methods=["POST"])
 @login_required
 def toggle_listen():
+    """Start or stop listening to a specific MQTT topic."""
     broker_id = request.form.get("broker_id")
     topic = request.form.get("topic")
     action = request.form.get("action")
@@ -257,7 +267,10 @@ def toggle_listen():
 @app.route("/stream")
 @login_required
 def stream():
+    """Server-Sent Events (SSE) stream for real-time MQTT messages."""
+
     def event_stream():
+        """Generator function for streaming messages via SSE."""
         import queue
 
         q = queue.Queue()
@@ -281,6 +294,7 @@ def stream():
 @app.route("/publish", methods=["GET", "POST"])
 @login_required
 def publish():
+    """Handle publishing messages to MQTT topics."""
     if request.method == "POST":
         broker_id = request.form.get("broker_id")
         topic = request.form.get("topic")
