@@ -41,6 +41,24 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 
+def get_version():
+    """Read the version from the VERSION file."""
+    version_file = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "VERSION"
+    )
+    try:
+        with open(version_file, "r") as f:
+            return f.read().strip()
+    except Exception:
+        return "unknown"
+
+
+@app.context_processor
+def inject_version():
+    """Inject the app version into all templates."""
+    return {"APP_VERSION": get_version()}
+
+
 def login_required(f):
     """Decorator to require login for a route."""
     from functools import wraps

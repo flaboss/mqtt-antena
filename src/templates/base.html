@@ -14,7 +14,9 @@
     <header>
         <div class="flex-row align-center">
             <span style="font-size: 2rem; margin-right: 10px;">📡</span>
-            <h1>MQTT Antena</h1>
+            <h1>MQTT Antena <code
+                    style="font-size: 1.2rem; background: var(--bg-secondary); padding: 2px 8px; border-radius: 4px; vertical-align: middle; margin-left: 8px;">v{{ APP_VERSION }}</code>
+            </h1>
         </div>
         <nav>
             {% if session.get('user_id') %}

@@ -4,6 +4,7 @@ VENV=.venv
 PYTHON=$(VENV)/bin/python
 PIP=$(VENV)/bin/pip
 PYTHON_VERSION_ARG=$(shell cat .python-version)
+VERSION_TAG=$(shell cat VERSION)
 
 .PHONY: build lint format clean publish run venv destroy help
 
@@ -37,10 +38,14 @@ clean: ## Clean up caches
 	rm -rf .ruff_cache
 
 publish: build ## Tag and push image to Docker Hub
-	@if [ -z "$(TAG)" ]; then echo "Error: TAG is not set. Use 'make publish TAG=v1.0.0'"; exit 1; fi
-	docker tag $(IMAGE_NAME) $(DOCKER_USER)/$(IMAGE_NAME):$(TAG)
-	docker tag $(IMAGE_NAME) $(DOCKER_USER)/$(IMAGE_NAME):latest
-	docker push $(DOCKER_USER)/$(IMAGE_NAME):$(TAG)
+	@TAG_TO_USE=$(TAG); \
+	if [ -z "$$TAG_TO_USE" ]; then \
+		TAG_TO_USE=$(VERSION_TAG); \
+		echo "TAG not provided, using VERSION: $$TAG_TO_USE"; \
+	fi; \
+	docker tag $(IMAGE_NAME) $(DOCKER_USER)/$(IMAGE_NAME):$$TAG_TO_USE; \
+	docker tag $(IMAGE_NAME) $(DOCKER_USER)/$(IMAGE_NAME):latest; \
+	docker push $(DOCKER_USER)/$(IMAGE_NAME):$$TAG_TO_USE; \
 	docker push $(DOCKER_USER)/$(IMAGE_NAME):latest
 
 destroy: ## Remove local containers and images
