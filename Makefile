@@ -26,7 +26,7 @@ run: build ## Start the application via Docker Compose
 	docker-compose up -d
 
 lint: venv ## Run code linting with Ruff
-	$(VENV)/bin/ruff check src
+	$(VENV)/bin/ruff check src --fix
 
 format: venv ## Format code with Ruff
 	$(VENV)/bin/ruff format src
