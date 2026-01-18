@@ -24,11 +24,14 @@ class Broker(db.Model):
     """MQTT Broker configuration model."""
 
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     ip = db.Column(db.String(100), nullable=False)
     port = db.Column(db.Integer, nullable=False, default=1883)
     username = db.Column(db.String(100), nullable=True)
     password = db.Column(db.String(100), nullable=True)
+
+    user = db.relationship("User", backref=db.backref("brokers", lazy=True))
 
     def to_dict(self):
         """Return a dictionary representation of the broker."""

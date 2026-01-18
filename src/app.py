@@ -138,7 +138,9 @@ def logout():
 @login_required
 def edit_broker(broker_id):
     """Edit an existing MQTT broker configuration."""
-    broker = Broker.query.get_or_404(broker_id)
+    broker = Broker.query.filter_by(
+        id=broker_id, user_id=session["user_id"]
+    ).first_or_404()
     if request.method == "POST":
         broker.name = request.form.get("name")
         broker.ip = request.form.get("ip")
@@ -174,7 +176,12 @@ def brokers():
                 name = ip
 
             new_broker = Broker(
-                name=name, ip=ip, port=port, username=user, password=password
+                name=name,
+                ip=ip,
+                port=port,
+                username=user,
+                password=password,
+                user_id=session["user_id"],
             )
             db.session.add(new_broker)
             db.session.commit()
@@ -182,7 +189,7 @@ def brokers():
 
         elif "delete" in request.form:
             b_id = request.form.get("broker_id")
-            broker = Broker.query.get(b_id)
+            broker = Broker.query.filter_by(id=b_id, user_id=session["user_id"]).first()
             if broker:
                 # Disconnect if connected
                 remove_client(broker.id)
@@ -192,7 +199,7 @@ def brokers():
 
         elif "connect" in request.form:
             b_id = request.form.get("broker_id")
-            broker = Broker.query.get(b_id)
+            broker = Broker.query.filter_by(id=b_id, user_id=session["user_id"]).first()
             if broker:
                 client = add_client(broker)
                 success, error = client.connect()
@@ -203,13 +210,15 @@ def brokers():
 
         elif "disconnect" in request.form:
             b_id = request.form.get("broker_id")
-            remove_client(int(b_id))
-            flash("Disconnected", "info")
+            broker = Broker.query.filter_by(id=b_id, user_id=session["user_id"]).first()
+            if broker:
+                remove_client(broker.id)
+                flash("Disconnected", "info")
 
         return redirect(url_for("brokers"))
 
     # GET
-    all_brokers = Broker.query.all()
+    all_brokers = Broker.query.filter_by(user_id=session["user_id"]).all()
 
     brokers_data = []
     for b in all_brokers:
@@ -237,7 +246,8 @@ def brokers():
 def subscription():
     """Display and manage MQTT topic subscriptions."""
     active_brokers_data = []
-    for b in Broker.query.all():
+    user_brokers = Broker.query.filter_by(user_id=session["user_id"]).all()
+    for b in user_brokers:
         c = get_client(b.id)
         if c and c.is_connected:
             is_listening = len(c.subscribed_topics) > 0
@@ -269,6 +279,12 @@ def toggle_listen():
 
     client = get_client(int(broker_id))
     if client:
+        # Verify ownership
+        broker = Broker.query.get(int(broker_id))
+        if not broker or broker.user_id != session["user_id"]:
+            flash("Unauthorized", "error")
+            return redirect(url_for("subscription"))
+
         if action == "stop":
             client.clear_subscription()
             flash(f"Stopped listening on {client.name}", "info")
@@ -292,8 +308,11 @@ def stream():
         import queue
 
         q = queue.Queue()
+        user_id = session["user_id"]
         with listeners_lock:
-            listeners.append(q)
+            if user_id not in listeners:
+                listeners[user_id] = []
+            listeners[user_id].append(q)
         try:
             while True:
                 # 30s timeout to send keepalive
@@ -304,7 +323,10 @@ def stream():
                     yield ": keepalive\n\n"
         except GeneratorExit:
             with listeners_lock:
-                listeners.remove(q)
+                if user_id in listeners:
+                    listeners[user_id].remove(q)
+                    if not listeners[user_id]:
+                        del listeners[user_id]
 
     return Response(stream_with_context(event_stream()), mimetype="text/event-stream")
 
@@ -320,14 +342,21 @@ def publish():
 
         client = get_client(int(broker_id))
         if client and client.is_connected:
+            # Verify ownership
+            broker = Broker.query.get(int(broker_id))
+            if not broker or broker.user_id != session["user_id"]:
+                flash("Unauthorized", "error")
+                return redirect(url_for("publish"))
+
             client.publish(topic, message)
             flash("Message published", "success")
         else:
             flash("Broker not connected", "error")
 
+    user_brokers = Broker.query.filter_by(user_id=session["user_id"]).all()
     active_brokers = [
         {"id": c.broker_id, "name": c.name}
-        for c in [get_client(b.id) for b in Broker.query.all()]
+        for c in [get_client(b.id) for b in user_brokers]
         if c and c.is_connected
     ]
     return render_template("publish.html", active_brokers=active_brokers)

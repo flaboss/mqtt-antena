@@ -6,14 +6,16 @@ import time
 
 connected_clients = {}
 
-listeners = []
+# listeners = { user_id: [queue1, queue2, ...] }
+listeners = {}
 listeners_lock = threading.Lock()
 
 
-def broadcast_message(message_data):
-    """Push message to all active SSE listeners"""
+def broadcast_message(user_id, message_data):
+    """Push message to all active SSE listeners of a specific user"""
     with listeners_lock:
-        for q in listeners:
+        user_listeners = listeners.get(user_id, [])
+        for q in user_listeners:
             try:
                 q.put_nowait(message_data)
             except queue.Full:
@@ -23,9 +25,10 @@ def broadcast_message(message_data):
 class ActiveClient:
     """Wrapper for a Paho MQTT client managing a connection to a specific broker."""
 
-    def __init__(self, broker_id, name, ip, port, user=None, password=None):
+    def __init__(self, broker_id, user_id, name, ip, port, user=None, password=None):
         """Initialize an ActiveClient instance."""
         self.broker_id = broker_id
+        self.user_id = user_id
         self.name = name
         self.ip = ip
         self.port = port
@@ -113,7 +116,7 @@ class ActiveClient:
             "payload": payload_str,
         }
 
-        broadcast_message(data)
+        broadcast_message(self.user_id, data)
         print(f"[{timestamp}] {self.name} | {msg.topic}: {payload_str}", flush=True)
 
     def on_disconnect(self, client, userdata, rc):
@@ -134,6 +137,7 @@ def add_client(broker_obj):
 
     client = ActiveClient(
         broker_obj.id,
+        broker_obj.user_id,
         broker_obj.name,
         broker_obj.ip,
         broker_obj.port,
