@@ -1,8 +1,10 @@
+import json
+import os
 import eventlet
 
 eventlet.monkey_patch()
 
-from flask import (
+from flask import (  # noqa: E402
     Flask,
     render_template,
     request,
@@ -13,23 +15,19 @@ from flask import (
     Response,
     stream_with_context,
 )
-from database import db, User, Broker
-from mqtt_manager import (
+from database import db, User, Broker  # noqa: E402
+from mqtt_manager import (  # noqa: E402
     add_client,
     get_client,
     remove_client,
     listeners,
     listeners_lock,
 )
-import json
 
-import os
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "super_secret_key_dev_only")
 
-# Create data directory for persistence
-# We are in src/, so data is in ../data (root)
 data_dir = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data"
 )
@@ -112,9 +110,6 @@ def logout():
     return redirect(url_for("login"))
 
 
-# --- Broker Management ---
-
-
 @app.route("/brokers/edit/<int:broker_id>", methods=["GET", "POST"])
 @login_required
 def edit_broker(broker_id):
@@ -129,9 +124,6 @@ def edit_broker(broker_id):
         if not broker.name:
             broker.name = broker.ip
 
-        # If connected, reconnect to apply changes?
-        # Simpler: just save. User can reconnect manually.
-        # Or auto-disconnect. Let's auto-disconnect to avoid stale state.
         remove_client(broker.id)
 
         db.session.commit()
@@ -192,7 +184,7 @@ def brokers():
 
     # GET
     all_brokers = Broker.query.all()
-    # Augment with status
+
     brokers_data = []
     for b in all_brokers:
         client = get_client(b.id)
@@ -214,28 +206,13 @@ def brokers():
     return render_template("brokers.html", brokers=brokers_data)
 
 
-# --- Subscription ---
-
-
 @app.route("/subscription")
 @login_required
 def subscription():
-    # Only active clients
-    # We also want to know if they are listening to something to show correct button state
     active_brokers_data = []
-
-    # We might have a selected broker in the query or defaulting to first
-    # But the UI allows selecting from dropdown.
-    # To make the button toggle correctly, the UI needs to know the state of the *selected* broker.
-    # Since the dropdown changes via JS (or requires reload),
-    # for simplicity in this "no-JS" preference app, we can just pass the list
-    # and let the backend actions redirect back.
-    # However, to show "Stop" vs "Start", checking the first active one or passing all states is best.
-
     for b in Broker.query.all():
         c = get_client(b.id)
         if c and c.is_connected:
-            # Check if has any subscription
             is_listening = len(c.subscribed_topics) > 0
             current_topic = list(c.subscribed_topics)[0] if is_listening else ""
 
@@ -256,7 +233,7 @@ def subscription():
 def toggle_listen():
     broker_id = request.form.get("broker_id")
     topic = request.form.get("topic")
-    action = request.form.get("action")  # 'start' or 'stop'
+    action = request.form.get("action")
 
     if not broker_id:
         flash("Select a broker", "error")
@@ -275,11 +252,6 @@ def toggle_listen():
             )
 
     return redirect(url_for("subscription"))
-
-
-# Remove old separate routes
-# @app.route('/start_listen', methods=['POST']) ...
-# @app.route('/stop_listen', methods=['POST']) ...
 
 
 @app.route("/stream")
@@ -304,9 +276,6 @@ def stream():
                 listeners.remove(q)
 
     return Response(stream_with_context(event_stream()), mimetype="text/event-stream")
-
-
-# --- Publish ---
 
 
 @app.route("/publish", methods=["GET", "POST"])

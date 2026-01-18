@@ -1,8 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
-
-from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(db.Model):
@@ -24,8 +23,6 @@ class Broker(db.Model):
     port = db.Column(db.Integer, nullable=False, default=1883)
     username = db.Column(db.String(100), nullable=True)
     password = db.Column(db.String(100), nullable=True)
-    # We don't store connection status in DB persistently,
-    # as it's runtime state, but we can store if it *should* reflect in UI list.
 
     def to_dict(self):
         return {
