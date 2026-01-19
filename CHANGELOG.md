@@ -9,6 +9,8 @@ All notable changes to this project will be documented in this file.
 
 - adding continuous integration
 
+- adding cicd
+
 
 ### Features
 
@@ -26,6 +28,10 @@ All notable changes to this project will be documented in this file.
 - update changelog
 
 - update changelog
+
+- update changelog
+
+- release v1.3.0
 
 
 ## [v1.2.0] - 2026-01-19
