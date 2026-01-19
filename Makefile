@@ -1,8 +1,8 @@
 IMAGE_NAME=mqtt-antena
 DOCKER_USER=flvbssln
 VENV=.venv
-PYTHON=$(VENV)/bin/python
-PIP=$(VENV)/bin/pip
+PYTHON?=$(VENV)/bin/python
+PIP?=$(VENV)/bin/pip
 PYTHON_VERSION_ARG=$(shell cat .python-version)
 VERSION_TAG=$(shell cat VERSION)
 
