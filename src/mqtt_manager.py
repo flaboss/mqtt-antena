@@ -34,7 +34,10 @@ class ActiveClient:
         self.port = port
         self.user = user
         self.password = password
-        self.client = mqtt.Client(client_id=f"antena_{broker_id}_{int(time.time())}")
+        self.client = mqtt.Client(
+            mqtt.CallbackAPIVersion.VERSION1,
+            client_id=f"antena_{broker_id}_{int(time.time())}",
+        )
         self.is_connected = False
         self.connection_error = None
         self.subscribed_topics = set()
