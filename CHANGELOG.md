@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 
 
 
+### CI/CD
+
+- adding continuous integration
+
+
 ### Features
 
 - fix broken steps in the release script
@@ -13,8 +18,12 @@ All notable changes to this project will be documented in this file.
 
 - fix broken steps in the release script
 
+- adding unit tests
+
 
 ### Maintenance
+
+- update changelog
 
 - update changelog
 
