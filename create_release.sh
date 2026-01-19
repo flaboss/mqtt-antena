@@ -26,7 +26,7 @@ fi
 git fetch origin && \
 [ -z "$(git status --porcelain)" ] || { echo "There are uncommitted changes"; exit 1; } && \
 git merge-base --is-ancestor origin/main HEAD && \
-echo "OK to merge" || echo "Rebase or merge main first" && exit 1
+echo "OK to merge" || echo "Rebase or merge main first" ##&& exit 1
 
 
 # Updates main & merges
