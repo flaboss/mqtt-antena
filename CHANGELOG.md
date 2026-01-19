@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 
 
 
+### Features
+
+- fix broken steps in the release script
+
+- fix broken steps in the release script
+
+
+## [v1.2.0] - 2026-01-19
+
+
+
 ### Bug Fixes
 
 - seggregating user brokers
@@ -37,6 +48,8 @@ All notable changes to this project will be documented in this file.
 ### Maintenance
 
 - deleting old files
+
+- update changelog
 
 
 ### Refactoring
