@@ -52,7 +52,7 @@ destroy: ## Remove local containers and images
 	docker-compose down --rmi local --volumes --remove-orphans
 	docker rmi $(IMAGE_NAME) || true
 
-release: ## Update VERSION, generate changelog, tag, and push (usage: make release v=1.2.3)
+release: ## Update the VERSION file (usage: make release v=1.2.3)
 	@if [ -z "$(v)" ]; then echo "Error: v is not set. Use 'make release v=1.2.3'"; exit 1; fi
-	@chmod +x create_release.sh
-	@./create_release.sh $(v)
+	@echo "$(v)" > VERSION
+	@echo "Version updated to $(v) in VERSION file"
