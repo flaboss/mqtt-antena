@@ -17,3 +17,6 @@ minima:
 title: 📡 MQTT Antena
 
 hide_site_feed_link: true
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
