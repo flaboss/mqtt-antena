@@ -1,6 +1,7 @@
 #remote_theme: pages-themes/hacker@v0.2.0
 #theme: minima
 remote_theme: jekyll/minima@d4d779a
+title: 📡 MQTT Antena
 minima:
   skin: dark
 
@@ -14,9 +15,8 @@ minima:
   nav_pages:
      - about.md
 
-title: 📡 MQTT Antena
+  hide_site_feed_link: true
 
-hide_site_feed_link: true
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
