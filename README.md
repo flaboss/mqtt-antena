@@ -1,5 +1,6 @@
 ![Dockerhub Pulls](https://img.shields.io/docker/pulls/fbossolan/mqtt-antena.svg)
 [![CI](https://github.com/fbossolan/mqtt-antena/actions/workflows/ci.yml/badge.svg)](https://github.com/fbossolan/mqtt-antena/actions/workflows/ci.yml)
+[![CD](https://github.com/fbossolan/mqtt-antena/actions/workflows/cd.yml/badge.svg)](https://github.com/fbossolan/mqtt-antena/actions/workflows/cd.yml)
 
 📡 MQTT Antena 
 
