@@ -54,7 +54,7 @@ If you just want to run the application without downloading the source code, use
 version: '3.8'
 services:
   mqtt-antena:
-    image: flvbssln/mqtt-antena:latest
+    image: fbossolan/mqtt-antena:latest
     container_name: mqtt-antena
     ports:
       - "8585:8585"

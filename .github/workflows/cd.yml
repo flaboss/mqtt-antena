@@ -52,6 +52,6 @@ jobs:
           context: .
           push: true
           tags: |
-            flvbssln/mqtt-antena:${{ steps.version.outputs.version }}
-            flvbssln/mqtt-antena:latest
+            ${{ secrets.DOCKER_USERNAME }}/mqtt-antena:${{ steps.version.outputs.version }}
+            ${{ secrets.DOCKER_USERNAME }}/mqtt-antena:latest
 
