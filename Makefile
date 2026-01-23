@@ -1,5 +1,5 @@
 IMAGE_NAME=mqtt-antena
-DOCKER_USER=flvbssln
+DOCKER_USER=fbossolan
 VENV=.venv
 PYTHON?=$(VENV)/bin/python
 PIP?=$(VENV)/bin/pip
