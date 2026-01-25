@@ -4,7 +4,8 @@ MQTT Antena is a simple, modern, web-based MQTT client application built with Py
 
 ##  Features
 
--   **User Accounts:** Simple registration and login system.
+-   **User Accounts:** Simple registration (with password confirmation) and login system.
+-   **Password Reset:** Command-line tool for resetting user passwords.
 -   **Broker Management:** Add, edit, connect, and delete multiple MQTT broker connections.
 -   **Live Subscription:** Real-time message monitoring using Server-Sent Events (SSE).
 -   **Subscription Filtering:** Subscribe to specific topics or use wildcards (`#`).
@@ -110,6 +111,7 @@ A `Makefile` is provided to simplify development tasks:
 -   **Run Application:** `make run` (Starts app via Docker Compose).
 -   **Linting:** `make lint` (Runs Ruff check).
 -   **Formatting:** `make format` (Runs Ruff format).
+-   **Password Reset:** `make reset-password user=USER pass=PASS` (Resets a user password).
 -   **Cleanup:** `make clean` (Removes caches and `.venv`).
 -   **Publish Image:** `make publish TAG=vx.y.z` (Pushes to `flvbssln/mqtt-antena`).
 -   **Destroy Project:** `make destroy` (Removes local containers, images, and volumes).

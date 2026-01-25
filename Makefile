@@ -55,6 +55,13 @@ destroy: ## Remove local containers and images
 test: venv ## Run unit tests
 	$(PYTHON) -m pytest tests/
 
+reset-password: venv ## Reset a user's password (usage: make reset-password user=USERNAME pass=NEWPASS)
+	@if [ -z "$(user)" ] || [ -z "$(pass)" ]; then \
+		echo "Error: user and pass are required. Usage: make reset-password user=USERNAME pass=NEWPASS"; \
+		exit 1; \
+	fi
+	FLASK_APP=src/app.py $(VENV)/bin/flask reset-password $(user) $(pass)
+
 release: ## Update the VERSION file (usage: make release v=1.2.3)
 	@if [ -z "$(v)" ]; then echo "Error: v is not set. Use 'make release v=1.2.3'"; exit 1; fi
 	@echo "$(v)" > VERSION

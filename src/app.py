@@ -1,6 +1,7 @@
 import json
 import os
 import eventlet
+import click
 
 eventlet.monkey_patch()
 
@@ -57,6 +58,25 @@ def get_version():
 def inject_version():
     """Inject the app version into all templates."""
     return {"APP_VERSION": get_version()}
+
+
+from flask.cli import with_appcontext  # noqa: E402
+
+
+@app.cli.command("reset-password")
+@with_appcontext
+@click.argument("username")
+@click.argument("password")
+def reset_password(username, password):
+    """Reset a user's password via CLI."""
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        print(f"User '{username}' not found.")
+        return
+
+    user.set_password(password)
+    db.session.commit()
+    print(f"Password for user '{username}' has been reset successfully.")
 
 
 def login_required(f):
