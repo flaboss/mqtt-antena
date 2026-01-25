@@ -1,9 +1,12 @@
-import json
 import os
-import eventlet
-import click
 
-eventlet.monkey_patch()
+if os.environ.get("NO_MONKEY_PATCH") != "1":
+    import eventlet
+
+    eventlet.monkey_patch()
+
+import json
+import click
 
 from flask import (  # noqa: E402
     Flask,
@@ -90,10 +93,6 @@ def login_required(f):
         return f(*args, **kwargs)
 
     return decorated_function
-
-
-with app.app_context():
-    db.create_all()
 
 
 @app.route("/")
@@ -386,4 +385,6 @@ def publish():
 
 
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
     app.run(host="0.0.0.0", port=8585, debug=True)
