@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [v1.3.1] - 2026-01-25
 
 
 
@@ -30,6 +30,8 @@ All notable changes to this project will be documented in this file.
 - update changelog
 
 - release v1.3.1
+
+- update changelog
 
 
 ## [v1.3.0] - 2026-01-19
