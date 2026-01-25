@@ -53,4 +53,9 @@ git push origin "v$VERSION"
 
 gh release create "v$VERSION" --notes "$(git cliff --latest)"
 
+git cliff -o CHANGELOG.md
+git add CHANGELOG.md
+git commit -m "chore: update changelog"
+git push origin main
+
 echo "✅ Release v$VERSION created successfully"
