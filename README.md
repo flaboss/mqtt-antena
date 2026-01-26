@@ -7,6 +7,9 @@
 
 MQTT Antena is a simple, modern, web-based MQTT client application built with Python and Flask. It allows users to manage multiple MQTT broker connections by connecting to a broker, monitor real-time message streams, and publish messages through a clean web interface. It is intended to be used as a development tool for self-hosted MQTT-based applications. It is very useful for testing and debugging IoT messages between sensors and applications.
 
+![Brokers](./docs/img/img-brokers.png)<br><br>
+![Subscriptions](./docs/img/img-subscription2.png)
+
 ##  Features
 
 -   **User Accounts:** Simple registration (with password confirmation) and login system.
@@ -122,23 +125,15 @@ A `Makefile` is provided to simplify development tasks:
 -   **Publish Image:** `make publish TAG=vx.y.z` (Pushes to `flvbssln/mqtt-antena`).
 -   **Destroy Project:** `make destroy` (Removes local containers, images, and volumes).
 
-##  Project Structure
+##  How to Use
 
-```text
-mqtt-antena/
-├── src/                # Python source code
-│   ├── app.py          # Flask application and routes
-│   ├── database.py     # SQLAlchemy models
-│   ├── mqtt_manager.py # MQTT client logic
-│   ├── static/         # CSS and static assets
-│   └── templates/      # Jinja2 HTML templates
-├── data/               # Persistent database storage (ignored by git)
-├── Dockerfile          # Docker build configuration
-├── docker-compose.yml  # Docker Compose orchestration
-├── Makefile            # Automation recipes
-├── requirements.txt    # Python dependencies
-└── .gitignore          # Git ignore rules
-```
+![Create user](./docs/img/mqtt-antena-login.gif)
+<br><br>
+![Register Broker](./docs/img/mqtt-antena-register-broker.gif)
+<br><br>
+![Subscribe](./docs/img/mqtt-antena-subscribe.gif)
+<br><br>
+![Publish](./docs/img/mqtt-antena-publish.gif)
 
 ##  License
 
