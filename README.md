@@ -5,7 +5,7 @@
 
 📡 MQTT Antena
 
-MQTT Antena is a simple, modern, web-based MQTT client application built with Python and Flask. It allows users to manage multiple MQTT broker connections by connecting to a broker, monitor real-time message streams, and publish messages through a clean web interface. It is intended to be used as a development tool for self-hosted MQTT-based applications. It is very useful for testing and debugging IoT messages between sensors and applications.
+MQTT Antena is a simple, modern, web-based MQTT client application built with Python and Flask. It allows users to manage multiple MQTT broker connections by connecting to a broker, monitor real-time message streams, and publish messages through a clean web interface. It is intended to be used as a development/analysis tool for self-hosted MQTT-based applications. It is very useful for testing and debugging IoT messages between sensors and applications.
 <br><br>
 ![Subscriptions](./docs/img/img-subscription2.png)
 
@@ -15,7 +15,7 @@ MQTT Antena is a simple, modern, web-based MQTT client application built with Py
 -   **Password Reset:** Command-line tool for resetting user passwords.
 -   **Broker Management:** Add, edit, connect, and delete multiple MQTT broker connections.
 -   **Live Subscription:** Real-time message monitoring using Server-Sent Events (SSE).
--   **Subscription Filtering:** Subscribe to specific topics or use wildcards (`#`).
+-   **Subscription Filtering:** Subscribe to specific topics or use the wildcard `#` for all topics.
 -   **Message Publishing:** Send MQTT messages with configurable **QoS** (0, 1, 2) and **Retain** flags.
 -   **Aesthetics:** Modern, responsive UI with light and dark mode support.
 -   **Persistence:** Persistent database storage using Docker volumes.
@@ -24,15 +24,6 @@ MQTT Antena is a simple, modern, web-based MQTT client application built with Py
 
 - **Password Hashing:** User passwords are encrypted using `pbkdf2:sha256` hashing.
 - **Secret Key:** The application uses a `SECRET_KEY` for session security. **In production, you must set this via an environment variable.**
-
-##  Configuration
-
-You can configure the application using the following environment variables:
-
-| Variable | Description | Default |
-| :--- | :--- | :--- |
-| `SECRET_KEY` | Flask secret key for sessions | `super_secret_key_dev_only` |
-| `DATABASE_URL`| SQLAlchemy database URI | `sqlite:///../data/antena.db` |
 
 ##  Data Storage
 
@@ -107,6 +98,12 @@ Once connected to a broker you can subscribe to topics. You can use wildcards (`
 ### Publish messages:
 Once connected to a broker you can publish messages to topics. You can specify QoS level and Retain flag.
 ![Publish](./docs/img/mqtt-antena-publish.gif)
+<br><br>
+### Password Reset:
+Inside a container's terminal, run:
+````
+NO_MONKEY_PATCH=1 FLASK_APP=src/app.py flask reset-password <USERNAME> <NEW PASSWORD>
+```
 
 ##  License
 
