@@ -1,6 +1,27 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+
+
+### Documentation
+
+- updating readme.md
+
+
+### Features
+
+- QoS and retain features
+
+
+### Maintenance
+
+- update changelog
+
+- release v1.4.0
+
+
 ## [v1.3.2] - 2026-01-26
 
 
