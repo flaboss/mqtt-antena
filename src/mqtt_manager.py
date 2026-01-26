@@ -85,9 +85,9 @@ class ActiveClient:
             self.subscribed_topics.clear()
             print(f"Cleared subscriptions on {self.name}", flush=True)
 
-    def publish(self, topic, payload):
+    def publish(self, topic, payload, qos=0, retain=False):
         """Publish a message to a specific MQTT topic."""
-        self.client.publish(topic, payload)
+        self.client.publish(topic, payload, qos=qos, retain=retain)
 
     def on_connect(self, client, userdata, flags, rc):
         """Callback for when the client connects to the broker."""

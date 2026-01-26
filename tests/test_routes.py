@@ -109,3 +109,42 @@ def test_subscription_isolation(client):
     # Check brokers page
     rv = client.get("/brokers")
     assert b"Broker A" not in rv.data
+
+
+def test_publish_with_qos_and_retain(client, mocker):
+    """Test publishing a message with QoS and Retain flags."""
+    # Create user and log in
+    user = User(username="pubuser")
+    user.set_password("password")
+    db.session.add(user)
+    db.session.commit()
+
+    broker = Broker(name="Pub Broker", ip="127.0.0.1", user_id=user.id)
+    db.session.add(broker)
+    db.session.commit()
+
+    with client.session_transaction() as sess:
+        sess["user_id"] = user.id
+
+    # Mock mqtt_manager functions
+    mock_client = mocker.Mock()
+    mock_client.is_connected = True
+    mocker.patch("app.get_client", return_value=mock_client)
+
+    # Publish with QoS 1 and Retain on
+    rv = client.post(
+        "/publish",
+        data={
+            "broker_id": str(broker.id),
+            "topic": "test/topic",
+            "message": "hello world",
+            "qos": "1",
+            "retain": "on",
+        },
+        follow_redirects=True,
+    )
+
+    assert b"Message published (QoS: 1, Retain: True)" in rv.data
+    mock_client.publish.assert_called_once_with(
+        "test/topic", "hello world", qos=1, retain=True
+    )

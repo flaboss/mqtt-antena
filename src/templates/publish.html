@@ -14,6 +14,21 @@
         <label>Topic:</label>
         <input type="text" name="topic" placeholder="e.g. sensors/temp" required>
 
+        <div style="display: flex; gap: 1rem; margin-bottom: 1rem; align-items: center;">
+            <div>
+                <label>QoS:</label>
+                <select name="qos" style="width: 80px;">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                </select>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.53rem;">
+                <input type="checkbox" name="retain" id="retain" style="width: auto; margin: 0;">
+                <label for="retain" style="margin: 0;">Retain</label>
+            </div>
+        </div>
+
         <label>Message:</label>
         <textarea name="message" rows="5" placeholder="Enter payload..." required></textarea>
 

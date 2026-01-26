@@ -14,7 +14,7 @@ MQTT Antena is a simple, modern, web-based MQTT client application built with Py
 -   **Broker Management:** Add, edit, connect, and delete multiple MQTT broker connections.
 -   **Live Subscription:** Real-time message monitoring using Server-Sent Events (SSE).
 -   **Subscription Filtering:** Subscribe to specific topics or use wildcards (`#`).
--   **Message Publishing:** Send MQTT messages to any connected broker.
+-   **Message Publishing:** Send MQTT messages with configurable **QoS** (0, 1, 2) and **Retain** flags.
 -   **Aesthetics:** Modern, responsive UI with light and dark mode support.
 -   **Persistence:** Persistent database storage using Docker volumes.
 -   **Developer Friendly:** Includes a `Makefile` for common tasks and development.

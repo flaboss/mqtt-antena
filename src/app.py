@@ -365,6 +365,8 @@ def publish():
         broker_id = request.form.get("broker_id")
         topic = request.form.get("topic")
         message = request.form.get("message")
+        qos = int(request.form.get("qos", 0))
+        retain = request.form.get("retain") == "on"
 
         client = get_client(int(broker_id))
         if client and client.is_connected:
@@ -374,8 +376,8 @@ def publish():
                 flash("Unauthorized", "error")
                 return redirect(url_for("publish"))
 
-            client.publish(topic, message)
-            flash("Message published", "success")
+            client.publish(topic, message, qos=qos, retain=retain)
+            flash(f"Message published (QoS: {qos}, Retain: {retain})", "success")
         else:
             flash("Broker not connected", "error")
 
