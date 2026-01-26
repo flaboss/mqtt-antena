@@ -1,4 +1,9 @@
-# 📡 MQTT Antena
+![Dockerhub Pulls](https://img.shields.io/docker/pulls/fbossolan/mqtt-antena.svg)
+![CI](https://github.com/fbossolan/mqtt-antena/actions/workflows/ci.yml/badge.svg)
+![CD](https://github.com/fbossolan/mqtt-antena/actions/workflows/cd.yml/badge.svg)
+![Documentation](https://github.com/fbossolan/mqtt-antena/actions/workflows/pages/pages-build-deployment/badge.svg)
+
+📡 MQTT Antena
 
 MQTT Antena is a simple, modern, web-based MQTT client application built with Python and Flask. It allows users to manage multiple MQTT broker connections by connecting to a broker, monitor real-time message streams, and publish messages through a clean web interface. It is intended to be used as a development tool for self-hosted MQTT-based applications.
 
