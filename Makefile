@@ -20,7 +20,7 @@ $(VENV)/bin/activate: requirements.txt
 	$(PIP) install -r requirements.txt
 	touch $(VENV)/bin/activate
 
-build: ## Build the Docker image
+build: ## Build the Docker image (local architecture)
 	docker build --build-arg PYTHON_VERSION=$(PYTHON_VERSION_ARG) -t $(IMAGE_NAME) .
 
 run: build ## Start the application via Docker Compose
@@ -37,16 +37,16 @@ clean: ## Clean up caches
 	find . -type f -name "*.pyc" -delete
 	rm -rf .ruff_cache
 
-publish: build ## Tag and push image to Docker Hub
+publish: ## Build and push multi-arch image to Docker Hub
 	@TAG_TO_USE=$(TAG); \
 	if [ -z "$$TAG_TO_USE" ]; then \
 		TAG_TO_USE=$(VERSION_TAG); \
 		echo "TAG not provided, using VERSION: $$TAG_TO_USE"; \
 	fi; \
-	docker tag $(IMAGE_NAME) $(DOCKER_USER)/$(IMAGE_NAME):$$TAG_TO_USE; \
-	docker tag $(IMAGE_NAME) $(DOCKER_USER)/$(IMAGE_NAME):latest; \
-	docker push $(DOCKER_USER)/$(IMAGE_NAME):$$TAG_TO_USE; \
-	docker push $(DOCKER_USER)/$(IMAGE_NAME):latest
+	docker buildx build --platform linux/amd64,linux/arm64 --push \
+		--build-arg PYTHON_VERSION=$(PYTHON_VERSION_ARG) \
+		-t $(DOCKER_USER)/$(IMAGE_NAME):$$TAG_TO_USE \
+		-t $(DOCKER_USER)/$(IMAGE_NAME):latest .
 
 destroy: ## Remove local containers and images
 	docker-compose down --rmi local --volumes --remove-orphans
