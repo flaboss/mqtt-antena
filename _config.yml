@@ -1,6 +1,6 @@
-#remote_theme: pages-themes/hacker@v0.2.0
+remote_theme: pages-themes/hacker@v0.2.0
 #theme: minima
-remote_theme: jekyll/minima@d4d779a
+#remote_theme: jekyll/minima@d4d779a
 title: 📡 MQTT Antena
 description: A tool to help develop, test & monitor MQTT messages
 author: fbossolan
@@ -15,11 +15,8 @@ minima:
      - title: MQTT Antena Dockerhub
        icon: docker
        url: "https://hub.docker.com/r/fbossolan/mqtt-antena"
-    #  - title: Jekyll at X (formerly Twitter)
-    #    icon: x-twitter
-    #    url: "https://x.com/jekyllrb"
   nav_pages:
-     - about.md
+     - CHANGELOG.md
   hide_site_feed_link: true
 
 plugins:
