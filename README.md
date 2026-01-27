@@ -2,7 +2,8 @@
 ![CI](https://github.com/fbossolan/mqtt-antena/actions/workflows/ci.yml/badge.svg)
 ![CD](https://github.com/fbossolan/mqtt-antena/actions/workflows/cd.yml/badge.svg)
 ![Documentation](https://github.com/fbossolan/mqtt-antena/actions/workflows/pages/pages-build-deployment/badge.svg)
-[![Contributions are welcome](https://img.shields.io)](https://www.paypal.com/donate/?hosted_button_id=BB9EBVFNDPJUY
+[![Donate with PayPal](https://img.shields.io/badge/Donate-PayPal-blue?logo=paypal&logoColor=white)](https://www.paypal.com/donate/?hosted_button_id=BB9EBVFNDPJUY)
+
 
 
 📡 MQTT Antena
