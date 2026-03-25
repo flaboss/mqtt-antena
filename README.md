@@ -10,7 +10,7 @@
 
 MQTT Antena is a simple, modern, web-based MQTT client application built with Python and Flask. It allows users to manage multiple MQTT broker connections by connecting to a broker, monitor real-time message streams, and publish messages through a clean web interface. It is intended to be used as a development/analysis tool for self-hosted MQTT-based applications. It is very useful for testing and debugging IoT messages between sensors and applications.
 
-**You can use it as a standalone application or as a Home Assistant add-on.**
+**You can use it as a standalone docker application or as a Home Assistant add-on.**
 
 <br><br>
 ![Subscriptions](./docs/img/img-subscription2.png)
